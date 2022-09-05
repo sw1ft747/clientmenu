@@ -1,0 +1,92 @@
+"ClientMenu"
+{
+	"example_menu"
+	{
+		"Title"		"Example Menu"
+
+		"1"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example_menu"
+			"label"		"Menu Item #1"
+		}
+        "2"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example_menu"
+			"label"		"Menu Item #2"
+		}
+	    "3"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example_menu"
+			"label"		"Menu Item #3"
+		}
+        "4"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example_menu"
+			"label"		"Menu Item #4"
+		}
+        "5"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example_menu"
+			"label"		"Menu Item #5"
+		}
+        "6"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example_menu"
+			"label"		"Menu Item #6"
+		}
+        "7"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example_menu"
+			"label"		"Menu Item #7"
+			"flags"		"1"
+		}
+	    "8"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example_menu"
+			"label"		"Menu Item #8"
+		}
+	    "9"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example_menu2"
+			"label"		"Next"
+			"flags"		"1"
+		}
+		"0"
+		{
+			"command"	"cl_menu_playsound buttons/blip1"
+			"label"		"Exit"
+		}
+	}
+	
+	"example_menu2"
+	{
+		"Title"		"Example Menu #2"
+
+		"1"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example_menu2"
+			"label"		"Menu Item #1"
+		}
+        "2"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example_menu2"
+			"label"		"Menu Item #2"
+		}
+	    "3"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example_menu2"
+			"label"		"Menu Item #3"
+		}
+	    "8"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example_menu"
+			"label"		"Back"
+			"flags"		"1"
+		}
+		"0"
+		{
+			"command"	"cl_menu_playsound buttons/blip1"
+			"label"		"Exit"
+		}
+	}
+}

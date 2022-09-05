@@ -1,0 +1,4 @@
+"clientmenu/clientmenu.txt"
+{
+	"example"		"1"
+}
