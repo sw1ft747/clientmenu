@@ -1,5 +1,5 @@
 # Client Menu
-This is a [SvenMod](https://github.com/sw1ft747/svenmod) plugin that automatically lets you create and customize client-side menu.
+This is a [SvenMod](https://github.com/sw1ft747/svenmod) plugin that lets you create and customize client-side menu.
 
 Client menu has similar syntax of menu as in Left 4 Dead 2.
 
