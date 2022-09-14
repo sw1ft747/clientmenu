@@ -19,7 +19,8 @@
 
 CClientMenu g_ClientMenu;
 
-static wchar_t localize_buffer[4096];
+static wchar_t localize_buffer[8192];
+static wchar_t localization_missing_string[] = L"#FIXME_LOCALIZATION_FAIL_MISSING_STRING";
 
 static const wchar_t *wszLabelNums[10] =
 {
@@ -222,14 +223,14 @@ CClientMenuContext::CClientMenuContext()
 
 CClientMenuContext::~CClientMenuContext()
 {
-	if ( m_pwszTitle != NULL )
+	if ( m_pwszTitle != NULL && m_pwszTitle != localization_missing_string )
 	{
 		free( (void *)m_pwszTitle );
 	}
 
 	for (int i = 0; i < 10; i++)
 	{
-		if ( m_pwszLabels[i] != NULL )
+		if ( m_pwszLabels[i] != NULL && m_pwszLabels[i] != localization_missing_string )
 		{
 			free( (void *)m_pwszLabels[i] );
 		}
@@ -450,6 +451,22 @@ void CClientMenuContext::DrawPrintText(vgui::HFont font, int x, int y, int r, in
 	vgui::surface()->DrawPrintText(pwszText, wcslen(pwszText));
 }
 
+void CClientMenuContext::FeedTitle(const wchar_t *pwszTitle)
+{
+	if ( m_pwszTitle == NULL )
+	{
+		m_pwszTitle = pwszTitle;
+	}
+}
+
+void CClientMenuContext::FeedLabel(const wchar_t *pwszLabel, int slot)
+{
+	if ( m_pwszLabels[slot] == NULL )
+	{
+		m_pwszLabels[slot] = pwszLabel;
+	}
+}
+
 void CClientMenuContext::FeedTitle(const char *pszTitle)
 {
 	if ( m_pwszTitle == NULL )
@@ -501,6 +518,7 @@ void CClientMenuContext::FeedFlags(int flags, int slot)
 bool CClientMenu::LoadFromFile()
 {
 	int result_code;
+	std::unordered_map<std::string, std::string> localizationMap;
 
 	ClearAllContexts();
 
@@ -537,6 +555,7 @@ bool CClientMenu::LoadFromFile()
 			if ( !(file->Value() == "0" || file->Value() == "false") )
 			{
 				const char *pszExt = NULL;
+				std::string sLocalizationFile;
 				std::string sPath = "svencoop/clientmenu/";
 
 				const char *pszFilename = file->Key().c_str();
@@ -560,10 +579,15 @@ bool CClientMenu::LoadFromFile()
 						continue;
 					}
 
+					*(char *)pszExt = 0;
+					sLocalizationFile = file->Key();
+					*(char *)pszExt = '.';
+
 					sPath += file->Key();
 				}
 				else
 				{
+					sLocalizationFile = file->Key();
 					sPath += file->Key() + ".txt";
 				}
 
@@ -572,7 +596,7 @@ bool CClientMenu::LoadFromFile()
 
 				if ( result_code == KeyValuesParser::PARSE_FAILED )
 				{
-					Warning("[ClientMenu] Failed to parse file \"../%s\". Reason: %s (%d)\n", sPath.c_str(), KeyValuesParser::GetLastErrorMessage(), KeyValuesParser::GetLastErrorLine());
+					Warning("[ClientMenu] Failed to open file \"../%s\". Reason: %s (%d)\n", sPath.c_str(), KeyValuesParser::GetLastErrorMessage(), KeyValuesParser::GetLastErrorLine());
 					continue;
 				}
 
@@ -584,11 +608,137 @@ bool CClientMenu::LoadFromFile()
 
 				if ( kv_clientmenu->Key() == "ClientMenu" )
 				{
+					for (const std::pair<std::string, std::string> &pair : localizationMap)
+					{
+						const_cast<std::string *>(&pair.first)->clear();
+						const_cast<std::string *>(&pair.second)->clear();
+					}
+
+					localizationMap.clear();
+
+					bool bHasLocalization = false;
+
 					for (size_t j = 0; j < kv_clientmenu->GetList().size(); j++)
 					{
 						KeyValuesParser::KeyValues *menu = kv_clientmenu->GetList()[j];
 
-						if ( menu->IsSection() && menu->Key().size() > 0 )
+						if ( !menu->IsSection() && menu->Key().size() != 0 && menu->Value().size() != 0 && menu->Key() == "Language" )
+						{
+							std::string sLocalizationPath = "svencoop/clientmenu/";
+
+							sLocalizationFile += '_';
+							sLocalizationFile += menu->Value();
+
+							sLocalizationPath += sLocalizationFile;
+							sLocalizationPath += ".txt";
+
+							KeyValuesParser::UsesEscapeSequences(true);
+							KeyValuesParser::KeyValues *kv_localization = KeyValuesParser::LoadFromFile(sLocalizationPath.c_str(), &result_code);
+
+							if ( result_code == KeyValuesParser::PARSE_FAILED )
+							{
+								Warning("[ClientMenu] Failed to open localization file \"../%s\". Reason: %s (%d)\n", sLocalizationPath.c_str(), KeyValuesParser::GetLastErrorMessage(), KeyValuesParser::GetLastErrorLine());
+								break;
+							}
+
+							if ( kv_localization == NULL )
+							{
+								Warning("[ClientMenu] Localization file \"../%s\" is empty\n", sLocalizationPath.c_str());
+								break;
+							}
+
+							if ( kv_localization->Key() != "lang" )
+							{
+								Warning("[ClientMenu] Expected \"lang\" as main section in the localization file \"%s.txt\"\n", sLocalizationFile.c_str());
+
+								delete kv_localization;
+								break;
+							}
+
+							bool bHasTokens = false;
+							bool bFoundLang = false;
+							bool bLangMismatch = true;
+
+							KeyValuesParser::KeyValues *tokens = NULL;
+
+							for (size_t k = 0; k < kv_localization->GetList().size(); k++)
+							{
+								KeyValuesParser::KeyValues *localization_settings = kv_localization->GetList()[k];
+
+								if ( localization_settings->IsSection() )
+								{
+									if ( localization_settings->Key() == "Tokens" )
+									{
+										bHasTokens = true;
+										tokens = localization_settings;
+									}
+								}
+								else if ( localization_settings->Key() == "Language" )
+								{
+									if ( localization_settings->Value().size() != 0 && !stricmp( menu->Value().c_str(), localization_settings->Value().c_str() ) )
+									{
+										bLangMismatch = false;
+									}
+
+									bFoundLang = true;
+								}
+							}
+
+							if ( !bFoundLang )
+							{
+								Warning("[ClientMenu] Key \"Language\" is not present in the localization file \"%s.txt\"\n", sLocalizationFile.c_str());
+
+								delete kv_localization;
+								break;
+							}
+
+							if ( bLangMismatch )
+							{
+								Warning("[ClientMenu] Language mismatch in the key \"Language\" of the localization file \"%s.txt\" (expected \"%s\")\n", sLocalizationFile.c_str(), menu->Value().c_str());
+
+								delete kv_localization;
+								break;
+							}
+							
+							if ( !bHasTokens )
+							{
+								Warning("[ClientMenu] Section \"Tokens\" is not present in the localization file \"%s.txt\"\n", sLocalizationFile.c_str());
+
+								delete kv_localization;
+								break;
+							}
+
+							for (size_t l = 0; l < tokens->GetList().size(); l++)
+							{
+								KeyValuesParser::KeyValues *token = tokens->GetList()[l];
+
+								if ( !token->IsSection() && token->Key().size() != 0 && token->Value().size() != 0 )
+								{
+									auto found = localizationMap.find( token->Key() );
+
+									if ( found != localizationMap.end() )
+									{
+										Warning("[ClientMenu] Token \"%s\" is already declared in the localization file \"%s.txt\"\n", token->Key().c_str(), sLocalizationFile.c_str());
+										continue;
+									}
+
+									localizationMap.insert( std::pair<std::string, std::string>(token->Key(), token->Value()) );
+								}
+							}
+
+							bHasLocalization = true;
+							Msg("Loaded localization file \"%s.txt\"\n", sLocalizationFile.c_str());
+
+							delete kv_localization;
+							break;
+						}
+					}
+
+					for (size_t j = 0; j < kv_clientmenu->GetList().size(); j++)
+					{
+						KeyValuesParser::KeyValues *menu = kv_clientmenu->GetList()[j];
+
+						if ( menu->IsSection() && menu->Key().size() != 0 )
 						{
 							CClientMenuContext *pMenuContext = new CClientMenuContext();
 
@@ -606,13 +756,36 @@ bool CClientMenu::LoadFromFile()
 										{
 											KeyValuesParser::KeyValues *label_item = menu_item->GetList()[l];
 
+											if ( label_item->Value().size() == 0 )
+												continue;
+
 											if ( label_item->Key() == "command" )
 											{
 												pMenuContext->FeedCommand( label_item->Value().c_str(), label_num );
 											}
 											else if ( label_item->Key() == "label" )
 											{
-												pMenuContext->FeedLabel( label_item->Value().c_str(), label_num );
+												if ( label_item->Value()[0] == '#' && bHasLocalization )
+												{
+													auto found_localization_string = localizationMap.find( label_item->Value().c_str() + 1 );
+
+													if ( found_localization_string != localizationMap.end() )
+													{
+														std::string &sLocalizationString = localizationMap.at( label_item->Value().c_str() + 1 );
+
+														pMenuContext->FeedLabel( sLocalizationString.c_str(), label_num );
+													}
+													else
+													{
+														pMenuContext->FeedLabel( localization_missing_string, label_num );
+														//Warning("[ClientMenu] Localization file \"%s.txt\" is missing string \"%s\" of client menu \"%s\"\n",
+														//		sLocalizationFile.c_str(), label_item->Value().c_str() + 1, file->Key().c_str());
+													}
+												}
+												else
+												{
+													pMenuContext->FeedLabel( label_item->Value().c_str(), label_num );
+												}
 											}
 											else if ( label_item->Key() == "flags" )
 											{
@@ -621,9 +794,29 @@ bool CClientMenu::LoadFromFile()
 										}
 									}
 								}
-								else if ( menu_item->Key() == "Title" )
+								else if ( menu_item->Key() == "Title" && menu_item->Value().size() != 0 )
 								{
-									pMenuContext->FeedTitle( menu_item->Value().c_str() );
+									if ( menu_item->Value()[0] == '#' && bHasLocalization )
+									{
+										auto found_localization_string = localizationMap.find( menu_item->Value().c_str() + 1 );
+
+										if ( found_localization_string != localizationMap.end() )
+										{
+											std::string &sLocalizationString = localizationMap.at( menu_item->Value().c_str() + 1 );
+
+											pMenuContext->FeedTitle( sLocalizationString.c_str() );
+										}
+										else
+										{
+											pMenuContext->FeedTitle( localization_missing_string );
+											//Warning("[ClientMenu] Localization file \"%s.txt\" is missing string \"%s\" of client menu \"%s\"\n",
+											//		sLocalizationFile.c_str(), menu_item->Value().c_str() + 1, file->Key().c_str());
+										}
+									}
+									else
+									{
+										pMenuContext->FeedTitle( menu_item->Value().c_str() );
+									}
 								}
 							}
 
@@ -644,6 +837,14 @@ bool CClientMenu::LoadFromFile()
 	}
 
 	delete kv_filemanager;
+
+	for (const std::pair<std::string, std::string> &pair : localizationMap)
+	{
+		const_cast<std::string *>(&pair.first)->clear();
+		const_cast<std::string *>(&pair.second)->clear();
+	}
+
+	localizationMap.clear();
 
 	return true;
 }

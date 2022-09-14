@@ -40,6 +40,9 @@ public:
 private:
 	void DrawPrintText(vgui::HFont font, int x, int y, int r, int g, int b, int alpha, const wchar_t *pwszText);
 
+	void FeedTitle(const wchar_t *pwszTitle);
+	void FeedLabel(const wchar_t *pwszLabel, int slot);
+
 	void FeedTitle(const char *pszTitle);
 	void FeedLabel(const char *pszLabel, int slot);
 	void FeedCommand(const char *pszCommand, int slot);

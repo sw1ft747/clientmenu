@@ -130,7 +130,7 @@ PLUGIN_RESULT CClientMenuPlugin::DrawHUD(float time, int intermission)
 
 const char *CClientMenuPlugin::GetName(void)
 {
-	return "ClientMenu";
+	return "Client Menu";
 }
 
 const char *CClientMenuPlugin::GetAuthor(void)
@@ -140,7 +140,7 @@ const char *CClientMenuPlugin::GetAuthor(void)
 
 const char *CClientMenuPlugin::GetVersion(void)
 {
-	return "1.0.0";
+	return "1.1.0";
 }
 
 const char *CClientMenuPlugin::GetDescription(void)
