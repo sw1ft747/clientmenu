@@ -1,0 +1,22 @@
+﻿"lang"
+{
+	"Language"								"russian"
+	"Tokens"
+	{
+		"ExampleMenu_Back"					"Назад"
+		"ExampleMenu_Next"					"Вперед"
+		"ExampleMenu_Exit"					"Выход"
+		
+		"ExampleMenu_Title"					"Пример меню"
+		"ExampleMenu_Title2"				"Пример меню #2"
+		
+		"ExampleMenu_MenuItem1"				"Элемент меню #1"
+		"ExampleMenu_MenuItem2"				"Элемент меню #2"
+		"ExampleMenu_MenuItem3"				"Элемент меню #3"
+		"ExampleMenu_MenuItem4"				"Элемент меню #4"
+		"ExampleMenu_MenuItem5"				"Элемент меню #5"
+		"ExampleMenu_MenuItem6"				"Элемент меню #6"
+		"ExampleMenu_MenuItem7"				"Элемент меню #7"
+		"ExampleMenu_MenuItem8"				"Элемент меню #8"
+	}
+}

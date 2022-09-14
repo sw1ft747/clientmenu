@@ -1,0 +1,94 @@
+"ClientMenu"
+{
+	"Language"			"english"
+	
+	"example2_menu"
+	{
+		"Title"		"#ExampleMenu_Title"
+
+		"1"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example2_menu"
+			"label"		"#ExampleMenu_MenuItem1"
+		}
+        "2"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example2_menu"
+			"label"		"#ExampleMenu_MenuItem2"
+		}
+	    "3"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example2_menu"
+			"label"		"#ExampleMenu_MenuItem3"
+		}
+        "4"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example2_menu"
+			"label"		"#ExampleMenu_MenuItem4"
+		}
+        "5"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example2_menu"
+			"label"		"#ExampleMenu_MenuItem5"
+		}
+        "6"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example2_menu"
+			"label"		"#ExampleMenu_MenuItem6"
+		}
+        "7"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example2_menu"
+			"label"		"#ExampleMenu_MenuItem7"
+			"flags"		"1"
+		}
+	    "8"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example2_menu"
+			"label"		"#ExampleMenu_MenuItem8"
+		}
+	    "9"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example2_menu2"
+			"label"		"#ExampleMenu_Next"
+			"flags"		"1"
+		}
+		"0"
+		{
+			"command"	"cl_menu_playsound buttons/blip1"
+			"label"		"#ExampleMenu_Exit"
+		}
+	}
+	
+	"example2_menu2"
+	{
+		"Title"		"#ExampleMenu_Title2"
+
+		"1"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example2_menu2"
+			"label"		"#ExampleMenu_MenuItem1"
+		}
+        "2"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example2_menu2"
+			"label"		"#ExampleMenu_MenuItem2"
+		}
+	    "3"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example2_menu2"
+			"label"		"#ExampleMenu_MenuItem3"
+		}
+	    "8"
+		{
+			"command"	"cl_menu_playsound buttons/blip1; cl_menu_show example2_menu"
+			"label"		"#ExampleMenu_Title"
+			"flags"		"1"
+		}
+		"0"
+		{
+			"command"	"cl_menu_playsound buttons/blip1"
+			"label"		"#ExampleMenu_Exit"
+		}
+	}
+}

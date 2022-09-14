@@ -1,0 +1,22 @@
+﻿"lang"
+{
+	"Language"								"english"
+	"Tokens"
+	{
+		"ExampleMenu_Back"					"Back"
+		"ExampleMenu_Next"					"Next"
+		"ExampleMenu_Exit"					"Exit"
+		
+		"ExampleMenu_Title"					"Example Menu"
+		"ExampleMenu_Title2"				"Example Menu #2"
+		
+		"ExampleMenu_MenuItem1"				"Menu Item #1"
+		"ExampleMenu_MenuItem2"				"Menu Item #2"
+		"ExampleMenu_MenuItem3"				"Menu Item #3"
+		"ExampleMenu_MenuItem4"				"Menu Item #4"
+		"ExampleMenu_MenuItem5"				"Menu Item #5"
+		"ExampleMenu_MenuItem6"				"Menu Item #6"
+		"ExampleMenu_MenuItem7"				"Menu Item #7"
+		"ExampleMenu_MenuItem8"				"Menu Item #8"
+	}
+}
