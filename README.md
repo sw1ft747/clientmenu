@@ -38,3 +38,6 @@ cl_menu_playsound | file name | Play a sound in 2D
 When the plugin is loaded, it will execute file `clientmenu.cfg` from folder `Sven Co-op/svencoop/`.
 
 You can use that file to save console variables (colors, menu duration etc.).
+
+# Screenshot
+<img src="https://github.com/sw1ft747/clientmenu/blob/main/screenshot.png" width="100%">
