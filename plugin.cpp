@@ -27,11 +27,19 @@ public:
 
 	virtual void Unpause(void);
 
+	virtual void OnFirstClientdataReceived(client_data_t *pcldata, float flTime);
+
+	virtual void OnBeginLoading(void);
+
+	virtual void OnEndLoading(void);
+
+	virtual void OnDisconnect(void);
+
 	virtual void GameFrame(client_state_t state, double frametime, bool bPostRunCmd);
 
-	virtual PLUGIN_RESULT Draw(void);
+	virtual void Draw(void);
 
-	virtual PLUGIN_RESULT DrawHUD(float time, int intermission);
+	virtual void DrawHUD(float time, int intermission);
 
 	virtual const char *GetName(void);
 
@@ -116,16 +124,29 @@ void CClientMenuPlugin::GameFrame(client_state_t state, double frametime, bool b
 	}
 }
 
-PLUGIN_RESULT CClientMenuPlugin::Draw(void)
+void CClientMenuPlugin::OnFirstClientdataReceived(client_data_t *pcldata, float flTime)
 {
-	g_ClientMenu.Draw();
-
-	return PLUGIN_CONTINUE;
 }
 
-PLUGIN_RESULT CClientMenuPlugin::DrawHUD(float time, int intermission)
+void CClientMenuPlugin::OnBeginLoading(void)
 {
-	return PLUGIN_CONTINUE;
+}
+
+void CClientMenuPlugin::OnEndLoading(void)
+{
+}
+
+void CClientMenuPlugin::OnDisconnect(void)
+{
+}
+
+void CClientMenuPlugin::Draw(void)
+{
+	g_ClientMenu.Draw();
+}
+
+void CClientMenuPlugin::DrawHUD(float time, int intermission)
+{
 }
 
 const char *CClientMenuPlugin::GetName(void)
